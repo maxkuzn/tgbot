@@ -1,6 +1,7 @@
 package inmemorystorage
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -64,16 +65,17 @@ func TestStorage_Add(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			ctx := context.Background()
+
 			s := New()
 
 			for i, add := range tc.addBefore {
-				u, err := s.Register(add)
+				id, err := s.Register(ctx, add)
 				require.NoError(t, err)
-				assert.Equal(t, add.Name, u.Name)
-				assert.Equal(t, user.ID(i+1), u.ID)
+				assert.Equal(t, user.ID(i+1), id)
 			}
 
-			got, err := s.Get(tc.get)
+			got, err := s.Get(ctx, tc.get)
 			if tc.wantErr != nil {
 				require.ErrorIs(t, err, tc.wantErr)
 			} else {

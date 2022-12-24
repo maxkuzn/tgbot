@@ -1,10 +1,13 @@
 package user
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var ErrUserNotFound = errors.New("user not found")
 
 type Storage interface {
-	Register(user User) (User, error)
-	Get(userID ID) (User, error)
+	Register(ctx context.Context, user User) (ID, error)
+	Get(ctx context.Context, userID ID) (User, error)
 }
